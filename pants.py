@@ -5,12 +5,15 @@ import pandas as pd
 headers = {'User-Agent': 'Mozilla/5.0'}
 base_url = 'https://ooomalina.ru/catalog/zhenskij-trikotazh/bryuki-bridzhi-shorty-zhenskie-trikotazhnye/'
 
-def get_data_parents():
+def get_data_pants():
     data = []
     for page in range(1, 5):
         URL = f'{base_url}?PAGEN_1={page}/'
 
         response = requests.get(URL, headers=headers)
+        if response.status_code != 200:
+            print(f"Ошибка {response.status_code} на странице {page}")
+            continue
         soup = BeautifulSoup(response.text, 'html.parser')
         products = soup.find_all('div', class_='item_info')
 
@@ -26,7 +29,7 @@ def get_data_parents():
                      'ссылка': ref})
 
     df = pd.DataFrame(data)
-    df.to_excel('parents_data.xlsx', index=False)
-
+    df.to_excel('pants_data.xlsx', index=False)
+    print('парсинг завершён')
 
 
